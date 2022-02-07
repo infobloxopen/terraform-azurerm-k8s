@@ -50,11 +50,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = azurerm_resource_group.rg.0.name
   dns_prefix          = "${var.aks_name}-${random_id.cluster_name[count.index].hex}"
 
-  agent_pool_profile {
-    name            = var.aks_pool_name
-    count           = var.aks_nodes
-    vm_size         = var.aks_node_type
-    os_type         = "Linux"
+  default_node_pool {
+    name       = var.aks_pool_name
+    node_count = var.aks_nodes
+    vm_size    = var.aks_system_node_type
+    # this field is not supported
+    # os_type         = "Linux"
     os_disk_size_gb = var.aks_node_disk_size
   }
 

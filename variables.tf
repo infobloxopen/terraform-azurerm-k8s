@@ -1,7 +1,7 @@
 variable "enable_microsoft" {
   description = "Enable / Disable Microsoft Azure k8s (e.g. `true`)"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "enable_logs" {
@@ -30,6 +30,7 @@ variable "az_client_id" {
 variable "az_client_secret" {
   description = "Azure Service Principal password"
   type        = string
+  sensitive   = true
 }
 
 variable "az_tenant_id" {
@@ -37,10 +38,15 @@ variable "az_tenant_id" {
   type        = string
 }
 
-variable "aks_region" {
-  description = "AKS region (e.g. `West Europe`) -> `az account list-locations --output table`"
+variable "az_subscription_id" {
+  description = "Azure Subscription ID"
   type        = string
-  default     = "West Europe"
+}
+
+variable "aks_region" {
+  description = "AKS region (e.g. `westus`) -> `az account list-locations --output table`"
+  type        = string
+  default     = "westus"
 }
 
 variable "aks_name" {
@@ -55,11 +61,19 @@ variable "aks_nodes" {
   default     = 2
 }
 
+variable "aks_system_node_type" {
+  description = "AKS system node pool instance type (e.g. `standard_d2_v2` => 2vCPU, 7 GB RAM)"
+  type        = string
+  default     = "standard_d2_v2"
+}
+
+/*
 variable "aks_node_type" {
   description = "AKS node pool instance type (e.g. `Standard_D1_v2` => 1vCPU, 3.75 GB RAM)"
   type        = string
   default     = "Standard_D1_v2"
 }
+*/
 
 variable "aks_pool_name" {
   description = "AKS agent node pool name (e.g. `k8s-aks-nodepool`)"
