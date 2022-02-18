@@ -96,5 +96,5 @@ resource "azurerm_public_ip" "public_ip" {
 resource "local_file" "kubeconfigaks" {
   count    = var.enable_microsoft ? 1 : 0
   content  = azurerm_kubernetes_cluster.aks[count.index].kube_config_raw
-  filename = "${path.module}/kubeconfig_aks"
+  filename = var.kubeconfig
 }
