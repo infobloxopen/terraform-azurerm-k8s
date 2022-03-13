@@ -3,12 +3,6 @@ variable "kubeconfig" {
   type        = string
 }
 
-variable "enable_microsoft" {
-  description = "Enable / Disable Microsoft Azure k8s (e.g. `true`)"
-  type        = bool
-  default     = false
-}
-
 variable "enable_logs" {
   description = "Enable azure log analtics for container logs"
   type        = bool
