@@ -1,18 +1,7 @@
-variable "kubeconfig" {
-  description = "Specify the location of the kubeconfig"
-  type        = string
-}
-
 variable "enable_logs" {
   description = "Enable azure log analtics for container logs"
   type        = bool
   default     = false
-}
-
-variable "random_cluster_suffix" {
-  description = "Random 6 byte hex suffix for cluster name"
-  type        = string
-  default     = ""
 }
 
 variable "ssh_public_key" {
@@ -48,12 +37,6 @@ variable "aks_region" {
   default     = "westus"
 }
 
-variable "aks_name" {
-  description = "AKS cluster name (e.g. `k8s-aks`)"
-  type        = string
-  default     = "k8s"
-}
-
 variable "aks_nodes" {
   description = "AKS Kubernetes worker nodes (e.g. `2`)"
   type        = number
@@ -66,18 +49,16 @@ variable "aks_system_node_type" {
   default     = "standard_d2_v2"
 }
 
-/*
 variable "aks_node_type" {
   description = "AKS node pool instance type (e.g. `Standard_D1_v2` => 1vCPU, 3.75 GB RAM)"
   type        = string
   default     = "Standard_D1_v2"
 }
-*/
 
 variable "aks_pool_name" {
   description = "AKS agent node pool name (e.g. `k8s-aks-nodepool`)"
   type        = string
-  default     = "k8snodepool"
+  default     = ""
 }
 
 variable "aks_node_disk_size" {
