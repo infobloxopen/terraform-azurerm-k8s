@@ -3,14 +3,14 @@ resource "random_id" "cluster_name" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "K8sRG1"
+  name     = "${var.cluster_name}"
   location = var.aks_region
 }
 
 ## Log Analytics for Container logs (enable_logs = true)
 resource "azurerm_log_analytics_workspace" "logworkspace" {
   count               = var.enable_logs ? 1 : 0
-  name                = "${var.aks_name}-${random_id.cluster_name.hex}-law"
+  name                = "${var.cluster_name}-${random_id.cluster_name.hex}-law"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "PerGB2018"
@@ -40,14 +40,14 @@ data "azurerm_kubernetes_service_versions" "current" {
 
 # AKS with standard kubenet network profile
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "${var.aks_name}-${random_id.cluster_name.hex}"
+  name                = "${var.cluster_name}-${random_id.cluster_name.hex}"
   kubernetes_version  = data.azurerm_kubernetes_service_versions.current.latest_version
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "${var.aks_name}-${random_id.cluster_name.hex}"
+  dns_prefix          = "${var.cluster_name}-${random_id.cluster_name.hex}"
 
   default_node_pool {
-    name       = var.aks_pool_name
+    name       = coalesce(var.aks_pool_name, "${var.cluster_name}")
     node_count = var.aks_nodes
     vm_size    = var.aks_system_node_type
     # this field is not supported
@@ -80,11 +80,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 ## Static Public IP Address to be used e.g. by Nginx Ingress
 resource "azurerm_public_ip" "public_ip" {
-  name                = "k8s-public-ip-${random_id.cluster_name.hex}"
+  name                = "k8s-public-ip-${var.cluster_name}-${random_id.cluster_name.hex}"
   location            = azurerm_kubernetes_cluster.aks.location
   resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
   allocation_method   = "Static"
-  domain_name_label   = "${var.aks_name}-${random_id.cluster_name.hex}"
+  domain_name_label   = "${var.cluster_name}-${random_id.cluster_name.hex}"
 }
 
 ## kubeconfig file
